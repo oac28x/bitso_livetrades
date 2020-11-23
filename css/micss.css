@@ -1,0 +1,34 @@
+.textLeft{
+    text-align: left;
+}
+.textRight{
+    text-align: right;
+}
+.tablehbg{
+    background-color: #E3ECF6; 
+}
+.tablebg{
+    background-color: rgba(246, 249, 252, 0);
+}
+.tradeout{
+    /* Green */
+    color: #84b068; 
+}
+.tradein{
+    /* Red */
+    color: #955b75;
+}
+.minute{
+    color: #9D9398;
+}
+.statsTitles{
+    color: #9D9398;
+}
+.table-stats{
+    border: 1px solid #9D9398;
+    border-radius: 5px;
+}
+.table tbody tr td{
+    padding: 3px 5px !important;
+    
+}

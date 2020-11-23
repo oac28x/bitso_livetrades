@@ -1,0 +1,557 @@
+<html> 
+<head> 
+<title>Bitso Trades</title>
+
+<!-- 
+ Tablero de trades Bitso en tiempo real, BTC - ETH - XRP - MANA - LTC - BCH - GNT - BAT
+ Muestra medidas de tendencia centrar por moneta [Minimo, Maximo, Promedio, Mediana, Desviacion Estandard, Varianza] <- Para los analistas
+ Persistencia no implementada, datos que muestra al recargar el sitio son borrados. 
+ Hola de inicio en titulo se actualiza cada que se recarga.
+ Hace conteo de trades al alza en verde y baja en rojo.
+ Colore y estilo referentes a Bitso.com
+
+ Si te ayudó en algo y deseas donar para un café, dejo mis direcciones:
+ XRP: rLSn6Z3T8uCxbcd1oxwfGQN1Fdn5CyGujK DT: 31930983
+ ETH: 0xdb06ea3ca720e7c94ecf4fcf7a13f8e136c14cc3
+ BTC: 36KCiY7YSNGXiB1wjNdQXNaZXTQLStt34C 
+ -->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/micss.css">
+</head> 
+<body cz-shortcut-listen="true">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <h4><strong>Trades BTC&nbsp;</strong> 
+                <span class="tradein" id="btcDown">0↓</span> 
+                <span class="tradeout" id="btcUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="btcStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="btcMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="btcMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="btcPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="btcMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="btcDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="btcVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="btcTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto BTC</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg testRight">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades ETH
+                <span class="tradein" id="ethDown">0↓</span> 
+                <span class="tradeout" id="ethUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="ethStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="ethMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="ethMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="ethPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="ethMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="ethDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="ethVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="ethTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto ETH</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades XRP
+                <span class="tradein" id="xrpDown">0↓</span> 
+                <span class="tradeout" id="xrpUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="xrpStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="xrpMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="xrpMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="xrpPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="xrpMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="xrpDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="xrpVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="xrpTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto XRP</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades MANA
+                <span class="tradein" id="manaDown">0↓</span> 
+                <span class="tradeout" id="manaUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="manaStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="manaMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="manaMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="manaPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="manaMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="manaDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="manaVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="manaTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right;">Precio MXN</th>
+                        <th style="text-align: right;">Monto MANA</th>
+                        <th style="text-align: right;">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades LTC 
+                <span class="tradein" id="ltcDown">0↓</span> 
+                <span class="tradeout" id="ltcUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="ltcStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="ltcMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="ltcMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="ltcPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="ltcMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="ltcDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="ltcVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="ltcTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto LTC</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades BCH
+                <span class="tradein" id="bchDown">0↓</span> 
+                <span class="tradeout" id="bchUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="bchStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="bchMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="bchMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="bchPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="bchMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="bchDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="bchVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="bchTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto BCH</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades GNT
+                <span class="tradein" id="gntDown">0↓</span> 
+                <span class="tradeout" id="gntUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="gntStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="gntMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="gntMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="gntPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="gntMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="gntDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="gntVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="gntTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto GNT</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <h4 style="margin-left: 10px;">Trades BAT
+                <span class="tradein" id="batDown">0↓</span> 
+                <span class="tradeout" id="batUp">0↑</span>
+            </h4>
+            <table class="table table-stats table-striped" style="font-size: 14px;margin-bottom: 2px;" id="batStats">
+                <tbody class="tablebg">
+                    <tr>
+                        <td><span class="statsTitles">ºMínimo:</span><span class="tradein" id="batMin">$0</span></td>
+                        <td><span class="statsTitles">ºMáximo:</span><span class="tradeout" id="batMax">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºPromedio:</span><span id="batPromedio">$0</span></td>
+                        <td><span class="statsTitles">ºMediana:</span>&nbsp;<span id="batMediana">$0</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="statsTitles">ºDesStd:</span><span id="batDes">$0</span></td>
+                        <td><span class="statsTitles">ºVarianza:</span><span id="batVar">$0</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped" style="font-size: 14px;" id="batTable">
+                <thead class="tablehbg">
+                    <tr>
+                        <th style="text-align: left;">Hora</th>
+                        <th style="text-align: right">Precio MXN</th>
+                        <th style="text-align: right">Monto BAT</th>
+                        <th style="text-align: right">Valor MXN</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebg textRight">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/math.min.js"></script>
+<script type="text/javascript"> 
+//Coin data initialization
+var btcTradesData = InitiCoinData('btc');
+var ethTradesData = InitiCoinData('eth');
+var ltcTradesData = InitiCoinData('ltc');
+var xrpTradesData = InitiCoinData('xrp');
+var bchTradesData = InitiCoinData('bch');
+var gntTradesData = InitiCoinData('gnt');
+var batTradesData = InitiCoinData('bat');
+var manaTradesData = InitiCoinData('mana');
+
+//Coin visual elements initialization
+var btcVisualElements = InitVisualElements('btc');
+var ethVisualElements = InitVisualElements('eth');
+var ltcVisualElements = InitVisualElements('ltc');
+var xrpVisualElements = InitVisualElements('xrp');
+var bchVisualElements = InitVisualElements('bch');
+var gntVisualElements = InitVisualElements('gnt');
+var batVisualElements = InitVisualElements('bat');
+var manaVisualElements = InitVisualElements('mana');
+
+var interval = setInterval(function () { TradesPerMinute(); }, 60 * 1000); // 60 * 1000 milsec Every minute check count
+var minutesRunning = 0;
+var loadDate = new Date();
+document.title = 'Bitso Trades ' + str_pad(loadDate.getHours()) + ':' + str_pad(loadDate.getMinutes()) + ':' + str_pad(loadDate.getSeconds());
+var runningDay = loadDate.getDay();
+
+var formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
+var websocket = new WebSocket('wss://ws.bitso.com');
+
+websocket.onopen = function() {
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'btc_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'eth_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'xrp_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'mana_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'ltc_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'bch_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'gnt_mxn', type: 'trades' }));
+    websocket.send(JSON.stringify({ action: 'subscribe', book: 'bat_mxn', type: 'trades' }));
+};
+
+websocket.onmessage = function(message){
+    var data = JSON.parse(message.data);
+    //if (data.type != 'ka')
+    //    console.log(data); // Default response, no data
+
+    if (data.type == 'trades' && data.payload) {
+        switch(data.book){
+            case 'btc_mxn':
+                FillTables(data.payload, btcVisualElements, btcTradesData);
+            break;
+            case 'eth_mxn':
+                FillTables(data.payload, ethVisualElements, ethTradesData);
+            break;
+            case 'xrp_mxn':
+                FillTables(data.payload, xrpVisualElements, xrpTradesData);
+            break;
+            case 'mana_mxn':
+                FillTables(data.payload, manaVisualElements, manaTradesData);
+            break;
+            case 'ltc_mxn':
+                FillTables(data.payload, ltcVisualElements, ltcTradesData);
+            break;
+            case 'bch_mxn':
+                FillTables(data.payload, bchVisualElements, bchTradesData);
+            break;
+            case 'gnt_mxn':
+                FillTables(data.payload, gntVisualElements, gntTradesData);
+            break;
+            case 'bat_mxn':
+                FillTables(data.payload, batVisualElements, batTradesData);
+            break;
+            default:
+            break;
+        } 
+    }
+};
+
+function Stadistics(dt, ve){
+    dt.promedio = math.mean(dt.arrData);      //Media(promedio)
+    dt.min = math.min(dt.arrData);            //Mínimo
+    dt.max = math.max(dt.arrData);            //Máximo
+    let mediana = math.median(dt.arrData);    //Mediana
+    let devstd = math.std(dt.arrData);        //Desviacion Standard 'unbiased' d/n-1 default -> 'uncorrected' d/n  'biased' d/n+1
+    let variance = math.variance(dt.arrData); //Varianza
+
+    ve.vPromedio.textContent = formatter.format(dt.promedio);
+    ve.vMin.textContent = formatter.format(dt.min);
+    ve.vMax.textContent = formatter.format(dt.max);
+    ve.vMediana = formatter.format(mediana);
+    ve.vDesv.textContent = Number(devstd).toFixed(4);
+    ve.vVari.textContent = Number(variance).toFixed(4);
+}
+
+function FillTables(payload, ve, dt){
+    for (var i in payload) {
+        var trade = payload[i];
+
+        if(ve.vTable.rows.length > 9) ve.vTable.deleteRow(9);
+        var row = ve.vTable.insertRow(0);
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        var cell2 = row.insertCell(2);
+        var cell3 = row.insertCell(3);
+
+        dt.totalTrades++;
+        dt.price = trade['r']
+        dt.arrData.push(trade['r']);
+
+        if(dt.arrData.length > 512) dt.arrData.pop();
+
+        Stadistics(dt, ve);
+        if(trade['t']){
+            cell1.className = 'tradeout';
+            dt.countUp++;
+            ve.vCountUp.textContent = '\u00A0' + dt.countUp + "↑\u00A0";
+        } 
+        else{
+            cell1.className = 'tradein';
+            dt.countDown++;
+            ve.vCountDo.textContent = '\u00A0' + dt.countDown + "↓\u00A0";
+        }
+
+        var date = new Date();
+        cell0.className = 'textLeft';
+        cell0.textContent = str_pad(date.getHours()) + ':' + str_pad(date.getMinutes()) + ':' + str_pad(date.getSeconds());
+        cell1.textContent = formatter.format(trade['r']);
+        cell2.textContent = trade['a'];
+        cell3.textContent = formatter.format(trade['v']);
+    }
+}
+
+function TradesPerMinute(){
+    minutesRunning++;
+    SetLastValues(btcTradesData);
+    SetLastValues(ethTradesData);
+    SetLastValues(xrpTradesData);
+    SetLastValues(ltcTradesData);
+    SetLastValues(bchTradesData);
+    SetLastValues(gntTradesData);
+    SetLastValues(batTradesData);
+    SetLastValues(manaTradesData);
+}
+
+function SetLastValues(dataCoin){
+    dataCoin.minuteTotal = dataCoin.totalTrades - dataCoin.lastCountTotal;
+    dataCoin.minuteDown = dataCoin.countDown - dataCoin.lastCountDown;
+    dataCoin.minuteUp = dataCoin.countUp - dataCoin.lastCountUp;
+
+    if(dataCoin.minuteUp > 20 && dataCoin.lastPrice > 0){
+        console.log("Se mando mensaje a Telegram *ALTA*");
+        SendTelegramMessage(dataCoin, ' ↑↑\n');
+    }
+
+    if(dataCoin.minuteDown > 20 && dataCoin.lastPrice > 0){
+        console.log("Se mando mensaje a Telegram *BAJA*");
+        SendTelegramMessage(dataCoin, ' ↓↓\n');
+    }
+
+    if(new Date().getDay() != runningDay){
+        location.reload();
+    }
+
+    dataCoin.lastCountTotal = dataCoin.totalTrades;
+    dataCoin.lastCountUp = dataCoin.countUp;
+    dataCoin.lastCountDown = dataCoin.countDown;
+    dataCoin.lastPrice = dataCoin.price;
+}
+
+function SendTelegramMessage(dataObj, estadoString){
+    let message = dataObj.name.toUpperCase() + ' %' + Number((dataObj.price * 100 / dataObj.lastPrice) - 100).toFixed(2) + estadoString +
+        "[OldPrice: " + formatter.format(dataObj.lastPrice) + "]\n" + 
+        "[NewPrice: " + formatter.format(dataObj.price) + "]\n" + 
+        "[Promedio: " + formatter.format(dataObj.promedio) + "]\n" + 
+        "[Trades: " + dataObj.minuteTotal + "] [TUp: " + dataObj.minuteUp + "] [TDown: " + dataObj.minuteDown + "]\n" +
+        "[PMin: " + formatter.format(dataObj.min) + "] [PMax: " + formatter.format(dataObj.max) + "]";
+
+    let telegramBotId = '1234567890:AAE4dRj0093x3lTaf6T5Rb24Td0PwnQxeBk';  //Change this to your BotID this is an example
+    let chatId = -123456789; //987654321;  //If chatId is group it starts with - 
+
+    //Next link copy and paste in you browser, you will see your bot data, chat id and updates
+    //'https://api.telegram.org/bot' + telegramBotId + '/getUpdates' //Just an example, need you data
+
+    var settings = {
+        'async': true,
+        'crossDomain': true,
+        'url': 'https://api.telegram.org/bot' + telegramBotId + '/sendMessage',
+        'method': 'POST',
+        'headers': {
+            'Content-Type': 'application/json',
+            'cache-control': 'no-cache'
+        },
+        'data': JSON.stringify({
+            'chat_id': chatId,
+            'text': message
+        })
+    };
+
+    $.ajax(settings).done(function (response) {
+        console.log(response);
+    });
+}
+
+function InitiCoinData(coinName){
+    let newData = {
+        name: coinName,
+        countUp: 0,
+        countDown: 0,
+        totalTrades: 0,
+        lastCountUp: 0,
+        lastCountDown: 0,
+        lastCountTotal: 0,
+        minuteUp: 0,
+        minuteDown: 0,
+        minuteTotal: 0,
+        price: 0,
+        lastPrice: 0,
+        min: 0,
+        max: 0,
+        promedio: 0,
+        arrData: new Array()
+    }
+    return newData
+}
+
+function InitVisualElements(name){
+    let newVisualElements = {
+        name: name,
+        vTable: document.getElementById(name + "Table").tBodies[0],
+        vPromedio: document.getElementById(name + "Promedio"), 
+        vMediana: document.getElementById(name + "Mediana"), 
+        vMax: document.getElementById(name + "Max"),
+        vMin: document.getElementById(name + "Min"),
+        vDesv: document.getElementById(name + "Des"), 
+        vVari: document.getElementById(name + "Var"),
+        vCountUp: document.getElementById(name + "Up"),
+        vCountDo: document.getElementById(name + "Down")
+    }
+    return newVisualElements;
+}
+
+function str_pad(n) {
+    return String("00" + n).slice(-2);
+}
+</script>
+</body>
+</html>
